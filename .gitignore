@@ -1,0 +1,40 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env
+*.env
+
+# Logs and database files
+*.log
+*.sqlite3
+instance/
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# Testing and coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+coverage.xml
+*.cover
+.pytest_cache/
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+
+# MacOS and Linux
+.DS_Store
