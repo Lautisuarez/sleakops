@@ -20,7 +20,7 @@ services:
     depends_on:
       - db_sleakops
     environment:
-      DATABASE_URL: postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_URL}:5432/${DATABASE_NAME}
+      DATABASE_URL: postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_IP}:5432/${DATABASE_NAME}
     expose:
       - "8000"
     volumes:
