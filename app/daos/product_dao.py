@@ -1,7 +1,8 @@
 from typing import List
-from models.product import Product as ProductModel
-from schemas.product_schema import Product
 from sqlmodel import select, Session
+
+from models.product import Product as ProductModel
+from schemas.product_schema import Product, ProductCreate
 
 class ProductDAO:
     def __init__(self, db: Session):
@@ -26,5 +27,15 @@ class ProductDAO:
             query = query.where(ProductModel.memory == memory)
 
         products = self.db.exec(query).all()
-        return products
+        return [Product.model_validate(prod) for prod in products]
+
+    def get_product(self, sku: str) -> Product:
+        product = self.db.exec(select(ProductModel).where(ProductModel.sku == sku)).first()
+        return Product.model_validate(product) if product else None
+
+    def create_product(self, product: ProductCreate) -> Product:
+        product = ProductModel.model_validate(product)
+        self.db.add(product)
+        self.db.flush()
+        return Product.model_validate(product)
 

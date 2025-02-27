@@ -2,11 +2,10 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from db import init_db
-from routers import products
+from routers import products, term_product, load_data
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("Inicializando Base de datos...")
     init_db()
     yield
 
@@ -25,7 +24,8 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+app.include_router(load_data.router, prefix="/api/v1", tags=["Load Data"])
 app.include_router(products.router, prefix="/api/v1", tags=["Product"])
-
+app.include_router(term_product.router, prefix="/api/v1", tags=["Term to Product"])
 
 

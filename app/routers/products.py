@@ -1,10 +1,12 @@
 from typing import List
-from fastapi import APIRouter, Depends
-from dependencies.products import get_products_service
+from fastapi import APIRouter, Depends, HTTPException
+from sqlmodel import Session
+
+from db import get_session
 from services.product_service import ProductService
 from schemas.product_schema import Product
 
-router = APIRouter()
+router = APIRouter(prefix='/products')
 
 @router.get("/", response_model=List[Product])
 def get_products(
@@ -12,9 +14,11 @@ def get_products(
     instance_type: str = None,
     vcpu: int = None,
     memory: str = None,
-    service: ProductService = Depends(get_products_service),
+    db: Session = Depends(get_session)
 ):
     try:
+        service = ProductService(db)
         return service.get_products(database_engine, instance_type, vcpu, memory)
     except Exception as e:
-        return {"error": str(e)}
+        raise HTTPException(status_code=500, detail=str(e))
+
