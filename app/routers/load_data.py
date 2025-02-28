@@ -9,11 +9,6 @@ router = APIRouter(prefix="/load_data")
 
 @router.post('/' ,response_model=str)
 def load_data(db: Session = Depends(get_session)):
-    try:
-        service = LoadDataService(db)
-        service.load_data()
-        db.commit()
-        return "The JSON data was successfully loaded into the database."
-    except Exception as e:
-        db.rollback()
-        raise HTTPException(status_code=500, detail=str(e))
+    service = LoadDataService(db)
+    service.load_data()
+    return "The JSON data was successfully loaded into the database."

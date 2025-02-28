@@ -16,9 +16,7 @@ def get_products(
     memory: str = None,
     db: Session = Depends(get_session)
 ):
-    try:
-        service = ProductService(db)
-        return service.get_products(database_engine, instance_type, vcpu, memory)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    service = ProductService(db)
+    return service.get_products(database_engine, instance_type, vcpu, memory)
+
 

@@ -1,20 +1,18 @@
-from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from db import init_db
+from fastapi.responses import JSONResponse
+from sqlmodel import SQLModel
+from exceptions import DatabaseException, NotFoundException
+from db import engine
 from routers import products, term_product, load_data
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    init_db()
-    yield
 
 app = FastAPI(
     title="API - Prueba Técnica Sleakops",
     description="API Rest para saber el costo por hora/mensual/anual de una base de datos en particular.",
-    version="1.0.0",
-    lifespan=lifespan
+    version="1.0.0"
 )
+
+SQLModel.metadata.create_all(bind=engine)
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,3 +27,17 @@ app.include_router(products.router, prefix="/api/v1", tags=["Product"])
 app.include_router(term_product.router, prefix="/api/v1", tags=["Term to Product"])
 
 
+@app.exception_handler(DatabaseException)
+def database_exception_handler(request: Request, exc: DatabaseException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"message": exc.message}
+    )
+
+
+@app.exception_handler(NotFoundException)
+def not_found_exception_handler(request: Request, exc: NotFoundException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"message": exc.message}
+    )

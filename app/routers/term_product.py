@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session
 
 from db import get_session
@@ -8,28 +8,22 @@ from services.term_product_service import TermProductService
 
 router = APIRouter(prefix='/terms/product')
 
-@router.post("/", response_model=TermProduct)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=TermProduct)
 def add_term_to_product(
     params: TermProductCreate,
     db: Session = Depends(get_session)
 ):
-    try:
-        service = TermProductService(db)
-        term_product = service.add(params)
-        db.commit()
-        return term_product
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    service = TermProductService(db)
+    return service.add(params)
 
 @router.delete("/", response_model=TermProduct)
 def remove_term_to_product(
-    params: TermProductDelete,
+    sku: str,
+    term_code: str,
     db: Session = Depends(get_session)
 ):
-    try:
-        service = TermProductService(db)
-        term_product = service.delete(params)
-        db.commit()
-        return term_product
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    service = TermProductService(db)
+    return service.delete(TermProductDelete(
+        sku=sku,
+        term_code=term_code
+    ))
