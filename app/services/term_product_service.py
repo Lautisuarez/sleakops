@@ -1,5 +1,6 @@
 from sqlmodel import Session
 
+from settings import logger
 from exceptions import DatabaseException
 from daos.term_product_dao import TermProductDAO
 from services.product_service import ProductService
@@ -23,7 +24,7 @@ class TermProductService:
             self.db.commit()
         except Exception as err:
             self.db.rollback()
-            print(f"Error creating term to product: {err}")
+            logger.error(f"Error creating term to product: {err}")
             raise DatabaseException(status_code=500, message="An unexpected error ocurred creating term to product.")
         
         return term_product
@@ -37,7 +38,7 @@ class TermProductService:
             self.db.commit()
         except Exception as err:
             self.db.rollback()
-            print(f"Error deleting term from product: {err}")
+            logger.error(f"Error deleting term from product: {err}")
             raise DatabaseException(status_code=500, message="An unexpected error ocurred deleting term from product.")
 
         return term_product

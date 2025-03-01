@@ -4,6 +4,7 @@ from services.term_attribute_service import TermAttributeService
 from services.product_service import ProductService
 from schemas.term_schema import Term, TermCreate
 from daos.term_dao import TermDAO
+from settings import logger
 
 
 class TermService:
@@ -26,7 +27,7 @@ class TermService:
             return new_term
         except Exception as err:
             self.db.rollback()
-            print(f"Error creating term: {err}")
+            logger.error(f"Error creating term: {err}")
             raise DatabaseException(status_code=500, message="Error creating term.")
     
     def exists_term(self, term_code: str) -> Term:

@@ -2,7 +2,7 @@ from sqlmodel import Session
 from exceptions import DatabaseException
 from daos.term_attribute_dao import TermAttributeDAO
 from schemas.term_attribute_schema import TermAttribute, TermAttributeCreate
-
+from settings import logger
 
 class TermAttributeService:
     def __init__(self, db: Session):
@@ -24,5 +24,5 @@ class TermAttributeService:
             return new_term_attribute
         except Exception as err:
             self.db.rollback()
-            print(f"Error creating term attribute: {err}")
+            logger.error(f"Error creating term attribute: {err}")
             raise DatabaseException(status_code=500, message="Error creating term attribute.")

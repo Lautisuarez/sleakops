@@ -2,6 +2,8 @@ import time
 import requests
 from sqlmodel import Session
 
+from settings import logger
+
 from services.price_service import PriceService
 from services.term_product_service import TermProductService
 from services.term_service import TermService
@@ -87,14 +89,14 @@ class LoadDataService:
 
     def load_data(self):
         data, time_fetch = self.fetch_data()
-        print(f"Data fetched. Time: {time_fetch:.3f} seconds")
+        logger.info(f"Data fetched. Time: {time_fetch:.3f} seconds")
         
         time_process_products = self.process_products(data["products"])
-        print(f"Products processed. Time: {time_process_products:.3f} seconds")
+        logger.info(f"Products processed. Time: {time_process_products:.3f} seconds")
         
         time_process_ondeman = self.process_terms(data["terms"].get("OnDemand", {}), "OnDemand")
-        print(f"OnDemand terms processed. Time: {time_process_ondeman:.3f} seconds")
+        logger.info(f"OnDemand terms processed. Time: {time_process_ondeman:.3f} seconds")
         
         time_process_reserver = self.process_terms(data["terms"].get("Reserved", {}), "Reserved")
-        print(f"Reserved terms processed. Time: {time_process_reserver:.3f} seconds")
+        logger.info(f"Reserved terms processed. Time: {time_process_reserver:.3f} seconds")
 

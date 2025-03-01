@@ -1,6 +1,7 @@
 from typing import List
 from sqlalchemy.orm import Session
 
+from settings import logger
 from exceptions import DatabaseException, NotFoundException
 from daos.product_dao import ProductDAO
 from schemas.product_schema import Product, ProductCreate
@@ -20,7 +21,7 @@ class ProductService:
         try:
             return self.product_dao.get_products(database_engine, instance_type, vcpu, memory)
         except Exception as err:
-            print(f"Error reading products: {err}")
+            logger.error(f"Error reading products: {err}")
             raise DatabaseException(status_code=500, message="Error reading products.")
 
     def create_product(self, product: ProductCreate) -> Product:
@@ -30,7 +31,7 @@ class ProductService:
             return product
         except Exception as err:
             self.db.rollback()
-            print(f"Error creating product: {err}")
+            logger.error(f"Error creating product: {err}")
             raise DatabaseException(status_code=500, message="Error creating product.")
 
     def exists_product(self, sku: str) -> bool:
