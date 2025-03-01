@@ -13,6 +13,9 @@ def add_term_to_product(
     params: TermProductCreate,
     db: Session = Depends(get_session)
 ):
+    """
+    Add contract types to product using the product SKU and contract type code.
+    """
     service = TermProductService(db)
     return service.add(params)
 
@@ -22,6 +25,9 @@ def remove_term_to_product(
     term_code: str,
     db: Session = Depends(get_session)
 ):
+    """
+    Delete contract types from a product using the product SKU and the contract type code.
+    """
     service = TermProductService(db)
     return service.delete(TermProductDelete(
         sku=sku,
