@@ -1,0 +1,23 @@
+services:
+  db_test:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=testuser
+      - POSTGRES_PASSWORD=testpass
+      - POSTGRES_DB=testdb
+
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.tests
+    volumes:
+      - ./app:/app
+    depends_on:
+      - db_test
+    environment:
+      - DATABASE_IP=db_test
+      - DATABASE_PORT=5432
+      - DATABASE_USER=testuser
+      - DATABASE_PASSWORD=testpass
+      - DATABASE_NAME=testdb
+    command: ["python", "-m", "unittest", "discover", "-v", "tests"]
