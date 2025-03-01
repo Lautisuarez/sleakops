@@ -15,7 +15,7 @@ La API en si te permite saber el costo por hora/mensual/anual de una base de dat
 - **Base de datos**: PostgreSQL.
 - **Infraestructura**: Docker y Docker compose.
 
-### Database Design
+### Diseño de la base de datos
 ![Database Design](./db_diagram.png)
 
 ### Estructura del projecto

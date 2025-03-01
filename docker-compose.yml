@@ -16,7 +16,7 @@ services:
   api_sleakops:
     build: .
     deploy:
-      replicas: 3
+      replicas: 2
     depends_on:
       - db_sleakops
     environment:
